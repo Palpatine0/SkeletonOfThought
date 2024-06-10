@@ -1,7 +1,7 @@
 ## Skeleton of Thought
 
 ### Project Introduction
-The Skeleton-of-Thought project aims to enhance the performance and efficiency of large language models (LLMs) by leveraging parallel decoding techniques. Based on the concepts introduced in the "Skeleton of Thought" paper, this project outlines a method for generating concise, structured responses that are subsequently expanded into detailed answers. The primary goal is to implement a new template within the LangChain framework, enabling the creation of complex applications that can generate and expand multiple responses in parallel. This approach significantly speeds up the response generation process and enhances overall LLM performance.
+This project aims to significantly speed up the response generation of LLMs using parallel decoding techniques. Inspired by the "Skeleton of Thought" paper, it introduces a method to generate concise, structured responses that are expanded into detailed answers. Implemented within the LangChain framework, this approach breaks down complex queries into smaller chunks processed simultaneously, drastically reducing processing time and enhancing overall LLM performance. This project exemplifies the potential of advanced LLM techniques to make information processing faster and more efficient.
  
 ### Prerequisites
 - Python 3.11
