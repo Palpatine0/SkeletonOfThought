@@ -2,6 +2,7 @@ from langchain.chat_models import ChatOpenAI
 from langchain.prompts import ChatPromptTemplate
 from langchain_core.output_parsers import StrOutputParser
 from langchain_core.runnables import RunnablePassthrough
+from langchain.pydantic_v1 import BaseModel
 
 from dotenv import load_dotenv
 from langchain.callbacks.tracers.langchain import wait_for_all_tracers
@@ -79,9 +80,15 @@ def get_final_answer(expanded_list):
     return final_answer_str
 
 
-chain = RunnablePassthrough().assign(
-    skeleton = skeleton_generator_chain
-) | create_list_elements | point_expander_chain.map() | get_final_answer
+class InputType(BaseModel):
+    question: str
+
+
+chain = (
+        RunnablePassthrough.assign(
+            skeleton = skeleton_generator_chain
+        ) | create_list_elements | point_expander_chain.map() | get_final_answer
+).with_types(input_type = InputType)
 
 if __name__ == "__main__":
     print(chain.invoke({
