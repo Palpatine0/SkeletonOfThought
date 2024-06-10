@@ -38,21 +38,52 @@ Write it **very shortly** in 1∼2 sentence and do not continue with other point
 
 point_expander_prompt = ChatPromptTemplate.from_template(point_expander_template)
 
-point_expander_chain = point_expander_prompt | ChatOpenAI() | StrOutputParser()
+point_expander_chain = RunnablePassthrough.assign(
+    continuation = point_expander_prompt | ChatOpenAI() | StrOutputParser()
+) | (lambda x: x["point_skeleton"].strip() + " " + x['continuation'])
+
+
+def parse_numbered_list(input_str):
+    """
+    Parses a numbered list into a list of dictionaries with each element having two keys:
+    'index' for the index in the numbered list, and 'point' for the content.
+    """
+    lines = input_str.split('\n')
+
+    parsed_list = []
+
+    for line in lines:
+        parts = line.split('. ', 1)
+
+        if len(parts) == 2:
+            index = int(parts[0])
+            point = parts[1].strip()
+            parsed_list.append({'point_index': index, 'point_skeleton': point})
+
+    return parsed_list
+
+
+def create_list_elements(_input):
+    skeleton = _input['skeleton']
+    numbered_list = parse_numbered_list(skeleton)
+    for el in numbered_list:
+        el["skeleton"] = skeleton
+        el["question"] = _input['question']
+    return numbered_list
+
+
+def get_final_answer(expanded_list):
+    final_answer_str = "Here's a comprehensive answer:\n\n"
+    for i, el in enumerate(expanded_list):
+        final_answer_str += f"{i + 1}. {el}\n\n"
+    return final_answer_str
+
+
+chain = RunnablePassthrough().assign(
+    skeleton = skeleton_generator_chain
+) | create_list_elements | point_expander_chain.map() | get_final_answer
 
 if __name__ == "__main__":
-    skeleton="""
-    1. Communication
-    2. Active listening
-    3. Collaboration
-    4. Mediation
-    5. Conflict coaching
-    6. Establishing ground rules
-    7. Seeking common ground
-    """
-    print(skeleton_generator_chain.invoke({
+    print(chain.invoke({
         "question": "What are the most effective strategies for conflict resolution in the workplace?",
-        "skeleton": skeleton,
-        "point_index": "1",
-        "point_skeleton": "Communication."
     }))
