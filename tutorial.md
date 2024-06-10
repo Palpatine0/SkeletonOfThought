@@ -45,7 +45,7 @@ Set up LangServe to manage our application deployment.
 
    Command:
    ```bash
-   langchain app new sql-research-assistant
+   langchain app new skeleton-of-thought
    ```
 #### 2. LangSmith Setup
 
