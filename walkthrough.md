@@ -278,6 +278,8 @@ Run the following commands to set up and serve the application using LangServe.
    langchain serve
    ```
 
-Access [Prompter Playground](http://127.0.0.1:8000/skeleton-of-thought/playground/), be note that the port may vary depending on the configuration.
+You can now access the application through the following links:
+
+Access [Playground](http://127.0.0.1:8000/skeleton-of-thought/playground/)
 
 <img src="https://i.imghippo.com/files/BDwbr1718058672.jpg" alt="" border="0">
